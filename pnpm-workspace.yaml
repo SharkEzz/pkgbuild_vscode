@@ -1,0 +1,17 @@
+packages:
+  - 'packages/*'
+
+allowBuilds:
+  # Places the platform-specific binary. The @esbuild/<platform> optional dependency
+  # already carries it, so this is a fallback -- but keep it on for other platforms.
+  esbuild: true
+  # Native signing helper used by `vsce package`.
+  '@vscode/vsce-sign': true
+  # We consume only tree-sitter-bash's prebuilt .wasm, never its native binding,
+  # so its node-gyp-build step must never run.
+  tree-sitter-bash: false
+  # vsce's optional OS credential store. Only needed to publish, which we do not do.
+  keytar: false
+
+minimumReleaseAgeExclude:
+  - vscode-languageclient@10.1.1

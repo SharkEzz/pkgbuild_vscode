@@ -1,0 +1,24 @@
+{
+  "name": "@pkgbuild-lsp/parser",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fixtures": "./src/fixtures.ts",
+    "./test-support": "./src/test-support.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "web-tree-sitter": "^0.26.13",
+    "@pkgbuild-lsp/data": "workspace:*",
+    "vscode-languageserver-types": "^3.17.5"
+  },
+  "devDependencies": {
+    "tree-sitter-bash": "^0.25.1",
+    "@types/node": "^22.10.2"
+  }
+}

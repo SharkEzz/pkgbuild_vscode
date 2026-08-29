@@ -1,0 +1,22 @@
+{
+  "name": "@pkgbuild-lsp/analyzer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@pkgbuild-lsp/data": "workspace:*",
+    "@pkgbuild-lsp/parser": "workspace:*",
+    "vscode-languageserver-types": "^3.17.5"
+  },
+  "devDependencies": {
+    "tree-sitter-bash": "^0.25.1",
+    "@types/node": "^22.10.2"
+  }
+}

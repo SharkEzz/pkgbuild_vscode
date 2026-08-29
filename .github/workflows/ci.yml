@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Package extension
+        run: pnpm run package
+
+      # The corpus and grammar are generated from committed data; a diff here means
+      # someone edited a generated file by hand.
+      - name: Check generated files are current
+        run: |
+          pnpm run gen:grammar
+          git diff --exit-code -- packages/vscode-extension/syntaxes/
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: pkgbuild-vscode-vsix
+          path: packages/vscode-extension/*.vsix
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: pkgbuild-vscode-vsix
+
+      - name: Attach the vsix to the release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: '*.vsix'
+          generate_release_notes: true

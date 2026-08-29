@@ -1,0 +1,13 @@
+# Source and build inputs: the bundle in dist/ is all that ships.
+src/**
+esbuild.config.ts
+tsconfig.json
+vitest.config.ts
+node_modules/**
+.vscode/**
+
+# Source maps roughly quadruple the vsix; keep the extension's, drop the server's.
+dist/server/*.map
+
+**/*.ts
+!dist/**/*.cjs

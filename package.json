@@ -1,0 +1,29 @@
+{
+  "name": "pkgbuild-vscode",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.24.0",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "package": "turbo run package",
+    "fixtures:sync": "node scripts/sync-fixtures.ts",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "test:watch": "vitest --watch",
+    "gen:licenses": "node scripts/gen-licenses.ts",
+    "gen:grammar": "node scripts/gen-grammar.ts",
+    "gen": "pnpm run gen:licenses && pnpm run gen:grammar"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.28.2",
+    "turbo": "^2.10.12",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11",
+    "@pkgbuild-lsp/data": "workspace:*"
+  }
+}

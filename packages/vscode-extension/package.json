@@ -1,0 +1,133 @@
+{
+  "name": "pkgbuild-vscode",
+  "displayName": "PKGBUILD Language Support",
+  "description": "Syntax highlighting, hover documentation, completion and diagnostics for Arch Linux PKGBUILD files.",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "publisher": "local",
+  "type": "module",
+  "engines": {
+    "vscode": "^1.91.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Snippets"
+  ],
+  "keywords": [
+    "arch",
+    "archlinux",
+    "pkgbuild",
+    "makepkg",
+    "aur",
+    "pacman"
+  ],
+  "main": "./dist/extension.cjs",
+  "extensionKind": [
+    "workspace"
+  ],
+  "scripts": {
+    "build": "node esbuild.config.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "package": "vsce package --no-dependencies --out pkgbuild-vscode.vsix",
+    "clean": "rm -rf dist *.vsix",
+    "watch": "node esbuild.config.ts --watch"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^10.1.1"
+  },
+  "devDependencies": {
+    "@pkgbuild-lsp/server": "workspace:*",
+    "@types/vscode": "^1.91.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.28.2",
+    "@types/node": "^22.10.2"
+  },
+  "activationEvents": [
+    "onLanguage:pkgbuild"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "pkgbuild",
+        "aliases": [
+          "PKGBUILD",
+          "pkgbuild"
+        ],
+        "filenames": [
+          "PKGBUILD",
+          ".SRCINFO"
+        ],
+        "filenamePatterns": [
+          "PKGBUILD.*",
+          "*.PKGBUILD"
+        ],
+        "extensions": [
+          ".install"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "pkgbuild",
+        "scopeName": "source.shell.pkgbuild",
+        "path": "./syntaxes/pkgbuild.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "pkgbuild",
+        "path": "./snippets/pkgbuild.json"
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "language": "pkgbuild",
+        "scopes": {
+          "property.declaration.defaultLibrary": [
+            "support.type.property-name.pkgbuild"
+          ],
+          "function.declaration.defaultLibrary": [
+            "entity.name.function.pkgbuild"
+          ],
+          "parameter.defaultLibrary": [
+            "support.variable.makepkg.pkgbuild"
+          ]
+        }
+      }
+    ],
+    "configuration": {
+      "title": "PKGBUILD",
+      "properties": {
+        "pkgbuild.server.nodePath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "markdownDescription": "Absolute path to a Node.js binary used to run the language server. Leave empty (the default) to run on the editor's own Node runtime, which needs no external install and works over Remote-SSH, WSL and dev containers. Set it only if you specifically want the server on another Node build, for example `~/.local/share/fnm/aliases/default/bin/node`."
+        },
+        "pkgbuild.diagnostics.disabledRules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "scope": "resource",
+          "markdownDescription": "Diagnostic rules to turn off, by code (`PKGBUILD008`) or by name (`unquoted-path-variable`)."
+        },
+        "pkgbuild.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "scope": "window",
+          "description": "Trace the communication between VS Code and the PKGBUILD language server."
+        }
+      }
+    }
+  }
+}

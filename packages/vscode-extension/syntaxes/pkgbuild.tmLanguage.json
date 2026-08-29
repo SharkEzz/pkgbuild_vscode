@@ -1,0 +1,71 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "PKGBUILD",
+  "scopeName": "source.shell.pkgbuild",
+  "patterns": [
+    {
+      "include": "#maintainer-comment"
+    },
+    {
+      "include": "#pkgbuild-field"
+    },
+    {
+      "include": "#pkgbuild-function"
+    },
+    {
+      "include": "#makepkg-variable"
+    },
+    {
+      "include": "source.shell"
+    }
+  ],
+  "repository": {
+    "maintainer-comment": {
+      "match": "^(#\\s*(?:Maintainer|Contributor|Co-Maintainer|Former [Mm]aintainer)\\s*:)(.*)$",
+      "captures": {
+        "1": {
+          "name": "keyword.other.maintainer.pkgbuild"
+        },
+        "2": {
+          "name": "comment.line.number-sign.pkgbuild"
+        }
+      }
+    },
+    "pkgbuild-field": {
+      "match": "^\\s*\\b(?:(checkdepends|validpgpkeys|makedepends|optdepends|sha224sums|sha256sums|sha384sums|sha512sums|changelog|conflicts|noextract|provides|replaces|sha1sums|depends|install|license|md5sums|options|pkgbase|pkgdesc|pkgname|b2sums|backup|cksums|groups|pkgrel|pkgver|source|epoch|arch|url)|(checkdepends|makedepends|optdepends|sha224sums|sha256sums|sha384sums|sha512sums|conflicts|noextract|provides|replaces|sha1sums|depends|md5sums|b2sums|cksums|source)(_(?:x86_64|aarch64|armv7h|armv6h|arm|riscv64|i686)))\\b(?=\\+?=)",
+      "captures": {
+        "1": {
+          "name": "support.type.property-name.pkgbuild"
+        },
+        "2": {
+          "name": "support.type.property-name.pkgbuild"
+        },
+        "3": {
+          "name": "entity.other.attribute-name.architecture.pkgbuild"
+        }
+      }
+    },
+    "pkgbuild-function": {
+      "match": "^\\s*\\b(pkgver|prepare|build|check|package|package_[A-Za-z0-9@._+-]+)\\b(?=\\s*\\(\\s*\\))",
+      "captures": {
+        "1": {
+          "name": "entity.name.function.pkgbuild"
+        }
+      }
+    },
+    "makepkg-variable": {
+      "match": "(\\$)(?:(MAKEFLAGS|CXXFLAGS|startdir|LDFLAGS|pkgbase|SRCDEST|CFLAGS|pkgdir|srcdir|CARCH|CHOST)\\b|\\{(MAKEFLAGS|CXXFLAGS|startdir|LDFLAGS|pkgbase|SRCDEST|CFLAGS|pkgdir|srcdir|CARCH|CHOST)\\})",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.variable.shell"
+        },
+        "2": {
+          "name": "support.variable.makepkg.pkgbuild"
+        },
+        "3": {
+          "name": "support.variable.makepkg.pkgbuild"
+        }
+      }
+    }
+  }
+}

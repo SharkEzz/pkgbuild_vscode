@@ -1,0 +1,29 @@
+{
+  "name": "@pkgbuild-lsp/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "pkgbuild-language-server": "./dist/cli.cjs"
+  },
+  "scripts": {
+    "build": "node esbuild.config.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@pkgbuild-lsp/analyzer": "workspace:*",
+    "@pkgbuild-lsp/data": "workspace:*",
+    "@pkgbuild-lsp/parser": "workspace:*",
+    "vscode-languageserver": "^10.1.1",
+    "vscode-languageserver-textdocument": "^1.0.14",
+    "web-tree-sitter": "^0.26.13",
+    "vscode-languageserver-types": "^3.17.5"
+  },
+  "devDependencies": {
+    "tree-sitter-bash": "^0.25.1",
+    "@pkgbuild-lsp/data": "workspace:*",
+    "@types/node": "^22.10.2"
+  }
+}
