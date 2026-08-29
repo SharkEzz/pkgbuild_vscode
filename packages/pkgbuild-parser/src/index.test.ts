@@ -38,7 +38,10 @@ describe('assignments', () => {
   it('gives each array element its own range', () => {
     const m = model(`arch=('x86_64' 'any')\n`);
     const [first, second] = m.globals.get('arch')!.items;
-    expect(first!.range).toEqual({ start: { line: 0, character: 6 }, end: { line: 0, character: 14 } });
+    expect(first!.range).toEqual({
+      start: { line: 0, character: 6 },
+      end: { line: 0, character: 14 },
+    });
     expect(second!.range.start.character).toBe(15);
   });
 
@@ -84,7 +87,9 @@ describe('functions', () => {
 
 describe('split packages', () => {
   it('joins each pkgname entry to its package function', () => {
-    const m = model(`pkgname=('foo' 'foo-docs')\npackage_foo() { :; }\npackage_foo-docs() { :; }\n`);
+    const m = model(
+      `pkgname=('foo' 'foo-docs')\npackage_foo() { :; }\npackage_foo-docs() { :; }\n`,
+    );
     expect(m.packages.map((p) => p.name)).toEqual(['foo', 'foo-docs']);
     expect(m.packages.every((p) => p.fn)).toBe(true);
   });

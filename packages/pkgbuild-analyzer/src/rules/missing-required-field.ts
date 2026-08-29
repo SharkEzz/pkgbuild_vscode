@@ -23,20 +23,20 @@ export const missingRequiredField: Rule = {
 
     // `pkgbase` stands in for `pkgname` in a split package.
     const absent = REQUIRED_VARIABLES.filter(
-      (name) =>
-        !findByBase(model, name) && !(name === 'pkgname' && model.globals.has('pkgbase')),
+      (name) => !findByBase(model, name) && !(name === 'pkgname' && model.globals.has('pkgbase')),
     );
 
     return absent.map((name) => ({
       range: at({ line: 0, character: 0 }),
-      message: `Missing required field \`${name}\`. ${resolveVariableName(name)?.doc.summary ?? ''}`.trim(),
+      message:
+        `Missing required field \`${name}\`. ${resolveVariableName(name)?.doc.summary ?? ''}`.trim(),
       severity: Severity.Error,
       fixData: { name },
     }));
   },
 
   fix(diagnostic: Diagnostic, context, uri): CodeAction[] {
-    const name = (diagnostic.data as { name?: string } | undefined)?.name;
+    const name = diagnostic.data?.name;
     if (!name) return [];
 
     // Insert after the last existing top-level assignment so ordering stays conventional.

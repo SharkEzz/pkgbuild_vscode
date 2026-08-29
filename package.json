@@ -8,6 +8,11 @@
   "packageManager": "pnpm@11.24.0",
   "scripts": {
     "build": "turbo run build",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "check": "turbo run lint format:check typecheck test",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "package": "turbo run package",
@@ -19,11 +24,14 @@
     "gen": "pnpm run gen:licenses && pnpm run gen:grammar"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
+    "@pkgbuild-lsp/data": "workspace:*",
+    "@types/node": "^26.4.0",
     "esbuild": "^0.28.2",
+    "oxfmt": "0.65.0",
+    "oxlint": "^1.80.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "turbo": "^2.10.12",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.11",
-    "@pkgbuild-lsp/data": "workspace:*"
+    "vitest": "^4.1.11"
   }
 }

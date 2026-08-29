@@ -51,7 +51,10 @@ export async function applyFixes(text: string): Promise<string[]> {
 /** Applies text edits back-to-front so earlier offsets stay valid. */
 export function applyEdits(
   text: string,
-  edits: readonly { range: { start: { line: number; character: number }; end: { line: number; character: number } }; newText: string }[],
+  edits: readonly {
+    range: { start: { line: number; character: number }; end: { line: number; character: number } };
+    newText: string;
+  }[],
 ): string {
   const lines = text.split('\n');
   const offsetOf = (p: { line: number; character: number }): number => {
@@ -62,7 +65,8 @@ export function applyEdits(
   return [...edits]
     .sort((a, b) => offsetOf(b.range.start) - offsetOf(a.range.start))
     .reduce(
-      (acc, e) => acc.slice(0, offsetOf(e.range.start)) + e.newText + acc.slice(offsetOf(e.range.end)),
+      (acc, e) =>
+        acc.slice(0, offsetOf(e.range.start)) + e.newText + acc.slice(offsetOf(e.range.end)),
       text,
     );
 }

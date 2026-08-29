@@ -1,4 +1,10 @@
-import type { PkgAssignment, PkgbuildModel, PkgFunction, PkgValue, PkgVarRef } from '@pkgbuild-lsp/parser';
+import type {
+  PkgAssignment,
+  PkgbuildModel,
+  PkgFunction,
+  PkgValue,
+  PkgVarRef,
+} from '@pkgbuild-lsp/parser';
 import type { Position, Range } from 'vscode-languageserver-types';
 
 /** What the cursor is sitting on. */

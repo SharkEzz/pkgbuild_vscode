@@ -36,7 +36,7 @@ export const weakChecksum: Rule = {
   },
 
   fix(diagnostic: Diagnostic, _context, uri): CodeAction[] {
-    const data = diagnostic.data as { arch?: string } | undefined;
+    const data = diagnostic.data;
     const replacement = data?.arch
       ? `${PREFERRED_CHECKSUM_VARIABLE}_${data.arch}`
       : PREFERRED_CHECKSUM_VARIABLE;

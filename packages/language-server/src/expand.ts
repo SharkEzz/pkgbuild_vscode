@@ -13,11 +13,14 @@ const MAX_DEPTH = 8;
 export function expand(text: string, model: PkgbuildModel, depth = 0): string {
   if (depth >= MAX_DEPTH) return text;
 
-  return text.replace(/\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)/g, (match, braced, bare) => {
-    const name = (braced ?? bare) as string;
-    const assignment = model.globals.get(name);
-    const scalar = assignment?.scalar;
-    if (!assignment || assignment.kind !== 'scalar' || !scalar) return match;
-    return scalar.hasExpansion ? expand(scalar.text, model, depth + 1) : scalar.text;
-  });
+  return text.replace(
+    /\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)/g,
+    (match, braced, bare) => {
+      const name = braced ?? bare;
+      const assignment = model.globals.get(name);
+      const scalar = assignment?.scalar;
+      if (!assignment || assignment.kind !== 'scalar' || !scalar) return match;
+      return scalar.hasExpansion ? expand(scalar.text, model, depth + 1) : scalar.text;
+    },
+  );
 }

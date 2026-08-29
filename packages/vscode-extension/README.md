@@ -9,23 +9,23 @@ that catches the mistakes `makepkg` only reports after a full build.
 **Diagnostics with quick fixes.** Fifteen rules, all implemented natively — no external
 tools required:
 
-| Code | Catches |
-| --- | --- |
-| `PKGBUILD001` | A required field (`pkgname`, `pkgver`, `pkgrel`, `arch`) is missing |
-| `PKGBUILD002` | `source()` and a `*sums()` array have different lengths |
-| `PKGBUILD003` | `$pkgdir` used in `build()`, where it does not exist yet |
-| `PKGBUILD004` | `SKIP` on a downloaded tarball, disabling integrity checking |
-| `PKGBUILD005` | A split package with no `package_<name>()` |
-| `PKGBUILD006` | `pkgver` containing `-`, `:` or whitespace |
-| `PKGBUILD007` | Malformed `pkgrel` or `epoch` |
+| Code          | Catches                                                                |
+| ------------- | ---------------------------------------------------------------------- |
+| `PKGBUILD001` | A required field (`pkgname`, `pkgver`, `pkgrel`, `arch`) is missing    |
+| `PKGBUILD002` | `source()` and a `*sums()` array have different lengths                |
+| `PKGBUILD003` | `$pkgdir` used in `build()`, where it does not exist yet               |
+| `PKGBUILD004` | `SKIP` on a downloaded tarball, disabling integrity checking           |
+| `PKGBUILD005` | A split package with no `package_<name>()`                             |
+| `PKGBUILD006` | `pkgver` containing `-`, `:` or whitespace                             |
+| `PKGBUILD007` | Malformed `pkgrel` or `epoch`                                          |
 | `PKGBUILD008` | Unquoted `$pkgdir` / `$srcdir`, which word-splits on paths with spaces |
-| `PKGBUILD009` | Sources verified only by MD5 or SHA-1 |
-| `PKGBUILD010` | A package name pacman would reject |
-| `PKGBUILD011` | A `license()` entry that is not valid SPDX (Arch RFC 0016) |
-| `PKGBUILD012` | No `package()` function at all |
-| `PKGBUILD013` | `$startdir`, which breaks chroot builds |
-| `PKGBUILD014` | `arch=('any')` on a package that compiles native code |
-| `PKGBUILD015` | A malformed dependency or an inequality in `provides` |
+| `PKGBUILD009` | Sources verified only by MD5 or SHA-1                                  |
+| `PKGBUILD010` | A package name pacman would reject                                     |
+| `PKGBUILD011` | A `license()` entry that is not valid SPDX (Arch RFC 0016)             |
+| `PKGBUILD012` | No `package()` function at all                                         |
+| `PKGBUILD013` | `$startdir`, which breaks chroot builds                                |
+| `PKGBUILD014` | `arch=('any')` on a package that compiles native code                  |
+| `PKGBUILD015` | A malformed dependency or an inequality in `provides`                  |
 
 **Hover** documents every PKGBUILD field, build function and makepkg variable, resolves
 interpolated `source` entries to their real URL, and names SPDX licenses in full.
@@ -39,11 +39,11 @@ VCS fragments after `#`, and the file's own `_private` variables alongside `$src
 
 ## Settings
 
-| Setting | Default | Purpose |
-| --- | --- | --- |
-| `pkgbuild.diagnostics.disabledRules` | `[]` | Rules to turn off, by code or name |
-| `pkgbuild.server.nodePath` | `""` | Run the server on a specific Node binary |
-| `pkgbuild.trace.server` | `off` | Log LSP traffic |
+| Setting                              | Default | Purpose                                  |
+| ------------------------------------ | ------- | ---------------------------------------- |
+| `pkgbuild.diagnostics.disabledRules` | `[]`    | Rules to turn off, by code or name       |
+| `pkgbuild.server.nodePath`           | `""`    | Run the server on a specific Node binary |
+| `pkgbuild.trace.server`              | `off`   | Log LSP traffic                          |
 
 By default the language server runs on the editor's own Node runtime, so nothing extra
 needs installing and it works unchanged over Remote-SSH, in WSL and in dev containers.

@@ -16,7 +16,7 @@ export const invalidPkgver: Rule = {
     if (!pkgver || !value || value.hasExpansion || model.functions.has('pkgver')) return [];
     if (PKGVER_PATTERN.test(value.text)) return [];
 
-    const offenders = [...new Set([...value.text].filter((c) => /[\s:-]/.test(c)))]
+    const offenders = [...new Set(value.text.split('').filter((c) => /[\s:-]/.test(c)))]
       .map((c) => (c === ' ' ? 'a space' : `\`${c}\``))
       .join(', ');
 

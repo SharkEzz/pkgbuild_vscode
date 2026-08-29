@@ -95,6 +95,9 @@ export function complete(model: PkgbuildModel, textBefore: string): CompletionIt
 
     case 'top-level':
       return topLevelCompletions(model);
+
+    default:
+      return [];
   }
 }
 
@@ -176,6 +179,7 @@ function arrayValueCompletions(variable: string): CompletionItem[] {
 }
 
 function referenceCompletions(model: PkgbuildModel): CompletionItem[] {
+  // oxlint-disable-next-line oxc/no-map-spread
   const items: CompletionItem[] = ENVIRONMENT.map((e) => ({
     label: e.name,
     kind: Kind.Variable,

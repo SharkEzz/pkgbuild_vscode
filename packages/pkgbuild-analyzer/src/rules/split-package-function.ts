@@ -26,7 +26,7 @@ export const splitPackageFunction: Rule = {
   },
 
   fix(diagnostic: Diagnostic, context, uri): CodeAction[] {
-    const name = (diagnostic.data as { name?: string } | undefined)?.name;
+    const name = diagnostic.data?.name;
     if (!name) return [];
 
     // Append after the last function, or at end of file if there are none.
@@ -35,7 +35,7 @@ export const splitPackageFunction: Rule = {
       line = Math.max(line === context.lines.length ? 0 : line, fn.range.end.line + 1);
     }
 
-    const body = `\npackage_${name}() {\n  cd "\$srcdir"\n  \n}\n`;
+    const body = `\npackage_${name}() {\n  cd "$srcdir"\n  \n}\n`;
     return [
       {
         title: `Add package_${name}() stub`,

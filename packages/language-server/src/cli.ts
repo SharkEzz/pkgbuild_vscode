@@ -8,8 +8,8 @@ import { startServer } from './server.ts';
  * Present because esbuild emits CommonJS for this entry point; the bundled server ships
  * its wasm files as siblings of the bundle.
  */
-declare const __dirname: string;
+const dirname = import.meta.dirname;
 
 startServer(createConnection(ProposedFeatures.all), {
-  wasmPath: join(__dirname, 'tree-sitter-bash.wasm'),
+  wasmPath: join(dirname, 'tree-sitter-bash.wasm'),
 });

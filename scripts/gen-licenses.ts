@@ -1,3 +1,5 @@
+import 'node';
+
 /**
  * Regenerates packages/pkgbuild-data/src/spdx.generated.ts from the official SPDX list.
  * Run with: pnpm run gen:licenses
@@ -25,6 +27,7 @@ interface SpdxException {
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`SPDX fetch failed: ${res.status} ${res.statusText} (${url})`);
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   return (await res.json()) as T;
 }
 

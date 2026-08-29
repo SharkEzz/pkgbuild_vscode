@@ -13,5 +13,8 @@ export function loadFixtures(): Fixture[] {
   return readdirSync(FIXTURE_DIR)
     .filter((f) => f.endsWith('.PKGBUILD'))
     .sort()
-    .map((f) => ({ name: f.replace(/\.PKGBUILD$/, ''), text: readFileSync(join(FIXTURE_DIR, f), 'utf8') }));
+    .map((f) => ({
+      name: f.replace(/\.PKGBUILD$/, ''),
+      text: readFileSync(join(FIXTURE_DIR, f), 'utf8'),
+    }));
 }

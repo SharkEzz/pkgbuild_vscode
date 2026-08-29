@@ -38,6 +38,8 @@ pnpm install
 pnpm build          # bundle the server and the extension
 pnpm test           # 194 tests
 pnpm typecheck
+pnpm lint           # oxlint, type-aware
+pnpm format         # oxfmt, writes in place
 pnpm package        # produces packages/vscode-extension/pkgbuild-vscode.vsix
 ```
 
@@ -48,6 +50,32 @@ To install a local build:
 ```bash
 code --install-extension packages/vscode-extension/pkgbuild-vscode.vsix --force
 ```
+
+### Linting and formatting
+
+[oxlint](https://oxc.rs/docs/guide/usage/linter.html) and
+[oxfmt](https://oxc.rs/docs/guide/usage/formatter.html), configured in `.oxlintrc.json`
+and `.oxfmtrc.json`. Linting is type-aware (`options.typeAware`), which is why
+`oxlint-tsgolint` is a dependency.
+
+```bash
+pnpm lint           # pnpm lint:fix applies the safe autofixes
+pnpm format         # pnpm format:check to only report
+pnpm check          # lint + format:check + typecheck + test, through turbo
+```
+
+Both run repo-wide from a single process rather than per package -- they are fast enough
+that per-package fan-out costs more than it saves. Turbo wires them as root tasks
+(`//#lint`, `//#format:check`) whose `inputs` are listed explicitly, because a root task
+otherwise hashes only files belonging to no workspace and would never invalidate on a
+source change.
+
+`pnpm lint` and `pnpm format` call the binaries directly; `pnpm check` is the turbo entry
+point. They are deliberately not the same script -- a `"lint": "turbo run lint"` would
+recurse, since turbo's `//#lint` task invokes the root `lint` script.
+
+Generated files (`syntaxes/`, `*.generated.ts`, `__snapshots__/`) are excluded from both.
+Reformatting them would break the staleness check below.
 
 ### Generated files
 
@@ -66,7 +94,7 @@ at once, and the grammar cannot drift away from the server.
 
 `fixtures/aur/` holds real PKGBUILDs people actually build. The analyzer snapshots its
 findings over them in `packages/pkgbuild-analyzer/src/__snapshots__/corpus.md`. Expected
-state is *near* clean, not clean — every recorded finding has been reviewed and is a
+state is _near_ clean, not clean — every recorded finding has been reviewed and is a
 genuine issue in the upstream file. A snapshot diff therefore means a rule got broader
 (possible false positive) or narrower (possible regression), and both are worth reading.
 

@@ -13,12 +13,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "web-tree-sitter": "^0.26.13",
     "@pkgbuild-lsp/data": "workspace:*",
-    "vscode-languageserver-types": "^3.17.5"
+    "vscode-languageserver-types": "^3.18.3",
+    "web-tree-sitter": "^0.26.13"
   },
   "devDependencies": {
-    "tree-sitter-bash": "^0.25.1",
-    "@types/node": "^22.10.2"
+    "@types/node": "^26.4.0",
+    "tree-sitter-bash": "^0.25.1"
   }
 }

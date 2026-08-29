@@ -15,10 +15,7 @@ export const Severity = {
  * Rules almost always want `source` regardless of whether the file wrote `source` or
  * `source_x86_64`, so this looks up by base name rather than as-written name.
  */
-export function findByBase(
-  model: PkgbuildModel,
-  base: string,
-): PkgAssignment | undefined {
+export function findByBase(model: PkgbuildModel, base: string): PkgAssignment | undefined {
   const direct = model.globals.get(base);
   if (direct) return direct;
   for (const assignment of model.globals.values()) {

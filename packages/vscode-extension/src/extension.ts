@@ -12,7 +12,10 @@ const CONFIG_SECTION = 'pkgbuild';
 
 function serverOptions(context: ExtensionContext): ServerOptions {
   const module = context.asAbsolutePath('dist/server/cli.cjs');
-  const nodePath = workspace.getConfiguration(CONFIG_SECTION).get<string>('server.nodePath')?.trim();
+  const nodePath = workspace
+    .getConfiguration(CONFIG_SECTION)
+    .get<string>('server.nodePath')
+    ?.trim();
 
   // Default: run on the extension host's own Node over IPC, which needs no external
   // runtime and works unchanged over Remote-SSH, in WSL and in dev containers.

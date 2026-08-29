@@ -28,6 +28,7 @@ interface Settings {
 const DEFAULT_SETTINGS: Settings = { disabledRules: [] };
 
 function readSettings(raw: unknown): Settings {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const section = (raw as { pkgbuild?: { diagnostics?: { disabledRules?: unknown } } } | undefined)
     ?.pkgbuild;
   const disabled = section?.diagnostics?.disabledRules;

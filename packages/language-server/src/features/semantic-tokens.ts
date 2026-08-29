@@ -1,4 +1,8 @@
-import { resolveEnvironmentName, resolveFunctionName, resolveVariableName } from '@pkgbuild-lsp/data';
+import {
+  resolveEnvironmentName,
+  resolveFunctionName,
+  resolveVariableName,
+} from '@pkgbuild-lsp/data';
 import type { PkgbuildModel } from '@pkgbuild-lsp/parser';
 import type { Range } from 'vscode-languageserver-types';
 
@@ -12,10 +16,12 @@ import type { Range } from 'vscode-languageserver-types';
 export const TOKEN_TYPES = ['property', 'function', 'variable', 'parameter'] as const;
 export const TOKEN_MODIFIERS = ['declaration', 'defaultLibrary', 'deprecated'] as const;
 
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 const TYPE_INDEX = Object.fromEntries(TOKEN_TYPES.map((t, i) => [t, i])) as Record<
   (typeof TOKEN_TYPES)[number],
   number
 >;
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 const MOD_BIT = Object.fromEntries(TOKEN_MODIFIERS.map((m, i) => [m, 1 << i])) as Record<
   (typeof TOKEN_MODIFIERS)[number],
   number
@@ -30,7 +36,8 @@ interface Token {
 /** Encodes tokens into the LSP's delta-relative flat array. */
 function encode(tokens: Token[]): number[] {
   const sorted = [...tokens].sort(
-    (a, b) => a.range.start.line - b.range.start.line || a.range.start.character - b.range.start.character,
+    (a, b) =>
+      a.range.start.line - b.range.start.line || a.range.start.character - b.range.start.character,
   );
 
   const data: number[] = [];
