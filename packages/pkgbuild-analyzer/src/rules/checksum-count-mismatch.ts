@@ -51,7 +51,7 @@ export const checksumCountMismatch: Rule = {
   },
 
   fix(diagnostic: Diagnostic, context, uri): CodeAction[] {
-    const data = diagnostic.data as { sums?: string; expected?: number; actual?: number } | undefined;
+    const data = diagnostic.data;
     if (!data?.sums || data.expected === undefined || data.actual === undefined) return [];
     if (data.expected <= data.actual) return [];
 

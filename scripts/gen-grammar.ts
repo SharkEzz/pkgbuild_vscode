@@ -7,12 +7,7 @@
  *
  * Run with: pnpm run gen:grammar
  */
-import {
-  ARCHITECTURES,
-  ENVIRONMENT,
-  FUNCTIONS,
-  VARIABLES,
-} from '@pkgbuild-lsp/data';
+import { ARCHITECTURES, ENVIRONMENT, FUNCTIONS, VARIABLES } from '@pkgbuild-lsp/data';
 import { writeFileSync } from 'node:fs';
 
 const TARGET = new URL(
@@ -24,7 +19,9 @@ const TARGET = new URL(
 const byLengthDesc = (a: string, b: string): number => b.length - a.length || a.localeCompare(b);
 
 const fields = VARIABLES.map((v) => v.name).sort(byLengthDesc);
-const archSuffixable = VARIABLES.filter((v) => v.archSuffixable).map((v) => v.name).sort(byLengthDesc);
+const archSuffixable = VARIABLES.filter((v) => v.archSuffixable)
+  .map((v) => v.name)
+  .sort(byLengthDesc);
 const arches = ARCHITECTURES.map((a) => a.value).filter((v) => v !== 'any');
 const functions = FUNCTIONS.map((f) => f.name);
 const envs = ENVIRONMENT.map((e) => e.name).sort(byLengthDesc);
@@ -50,8 +47,7 @@ const grammar = {
       },
     },
     'pkgbuild-field': {
-      match:
-        `^\\s*\\b(?:(${fields.join('|')})|(${archSuffixable.join('|')})(_(?:${arches.join('|')})))\\b(?=\\+?=)`,
+      match: `^\\s*\\b(?:(${fields.join('|')})|(${archSuffixable.join('|')})(_(?:${arches.join('|')})))\\b(?=\\+?=)`,
       captures: {
         1: { name: 'support.type.property-name.pkgbuild' },
         2: { name: 'support.type.property-name.pkgbuild' },

@@ -32,7 +32,7 @@ describe('real PKGBUILD corpus', () => {
       report.push(`${fixture.name}:`);
       for (const d of diagnostics) {
         report.push(
-          `  L${d.range.start.line + 1} ${SEVERITY_LABEL[d.severity ?? 1]} ${d.code} ${d.message}`,
+          `  L${d.range.start.line + 1} ${SEVERITY_LABEL[d.severity ?? 1]} ${d.code} ${typeof d.message === 'string' ? d.message : d.message.value}`,
         );
       }
     }
@@ -40,17 +40,20 @@ describe('real PKGBUILD corpus', () => {
     await expect(report.join('\n')).toMatchFileSnapshot('./__snapshots__/corpus.md');
   });
 
-  it.each(loadFixtures().map((f) => f.name))('emits well-formed diagnostics for %s', async (name) => {
-    const fixture = loadFixtures().find((f) => f.name === name)!;
-    for (const d of await diagnose(fixture.text)) {
-      expect(typeof d.message).toBe('string');
-      expect(d.code).toMatch(/^PKGBUILD\d{3}$/);
-      expect(d.source).toBe('pkgbuild');
-      // A range that starts after it ends would place the squiggle nowhere.
-      expect(d.range.end.line).toBeGreaterThanOrEqual(d.range.start.line);
-      if (d.range.end.line === d.range.start.line) {
-        expect(d.range.end.character).toBeGreaterThanOrEqual(d.range.start.character);
+  it.each(loadFixtures().map((f) => f.name))(
+    'emits well-formed diagnostics for %s',
+    async (name) => {
+      const fixture = loadFixtures().find((f) => f.name === name)!;
+      for (const d of await diagnose(fixture.text)) {
+        expect(typeof d.message).toBe('string');
+        expect(d.code).toMatch(/^PKGBUILD\d{3}$/);
+        expect(d.source).toBe('pkgbuild');
+        // A range that starts after it ends would place the squiggle nowhere.
+        expect(d.range.end.line).toBeGreaterThanOrEqual(d.range.start.line);
+        if (d.range.end.line === d.range.start.line) {
+          expect(d.range.end.character).toBeGreaterThanOrEqual(d.range.start.character);
+        }
       }
-    }
-  });
+    },
+  );
 });

@@ -39,10 +39,10 @@
   },
   "devDependencies": {
     "@pkgbuild-lsp/server": "workspace:*",
-    "@types/vscode": "^1.91.0",
+    "@types/node": "^26.4.0",
+    "@types/vscode": "^1.134.0",
     "@vscode/vsce": "^3.9.2",
-    "esbuild": "^0.28.2",
-    "@types/node": "^22.10.2"
+    "esbuild": "^0.28.2"
   },
   "activationEvents": [
     "onLanguage:pkgbuild"

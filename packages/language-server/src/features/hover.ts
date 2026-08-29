@@ -86,6 +86,9 @@ export function hover(model: PkgbuildModel, position: Position): Hover | undefin
 
     case 'scalar-value':
       return hoverScalar(model, found.value);
+
+    default:
+      return undefined;
   }
 }
 
@@ -114,13 +117,19 @@ function hoverArrayItem(
     const name = SPDX_LICENSES.get(item.text);
     if (name) return markdown(item.range, [`**${item.text}**`, name]);
     if (isKnownExceptionId(item.text)) {
-      return markdown(item.range, [`**${item.text}** *(SPDX exception)*`, SPDX_EXCEPTIONS.get(item.text)!]);
+      return markdown(item.range, [
+        `**${item.text}** *(SPDX exception)*`,
+        SPDX_EXCEPTIONS.get(item.text)!,
+      ]);
     }
     return undefined;
   }
 
   if (base === 'source' && item.hasExpansion) {
-    return markdown(item.range, ['**Resolved source**', '```\n' + expand(item.text, model) + '\n```']);
+    return markdown(item.range, [
+      '**Resolved source**',
+      '```\n' + expand(item.text, model) + '\n```',
+    ]);
   }
 
   return undefined;
@@ -131,5 +140,8 @@ function hoverScalar(
   value: { text: string; hasExpansion: boolean; range: Hover['range'] & object },
 ): Hover | undefined {
   if (!value.hasExpansion) return undefined;
-  return markdown(value.range, ['**Resolved value**', '```\n' + expand(value.text, model) + '\n```']);
+  return markdown(value.range, [
+    '**Resolved value**',
+    '```\n' + expand(value.text, model) + '\n```',
+  ]);
 }

@@ -224,6 +224,7 @@ function buildSplitPackages(
   const pkgname = globals.get('pkgname');
   if (!pkgname || pkgname.kind !== 'array') return [];
 
+  // oxlint-disable-next-line oxc/no-map-spread
   return pkgname.items.map((item) => {
     const fn = functions.get(`package_${item.text}`);
     return { name: item.text, nameRange: item.range, ...(fn ? { fn } : {}) };

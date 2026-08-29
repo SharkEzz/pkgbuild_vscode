@@ -25,9 +25,7 @@ export const archAnyWithBuild: Rule = {
     const build = model.functions.get('build');
     if (!build) return [];
 
-    const body = lines
-      .slice(build.bodyRange.start.line, build.bodyRange.end.line + 1)
-      .join('\n');
+    const body = lines.slice(build.bodyRange.start.line, build.bodyRange.end.line + 1).join('\n');
     const match = COMPILING_COMMANDS.exec(body);
     if (!match) return [];
 

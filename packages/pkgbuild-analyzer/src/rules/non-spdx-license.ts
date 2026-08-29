@@ -72,7 +72,7 @@ export const nonSpdxLicense: Rule = {
   },
 
   fix(diagnostic: Diagnostic, _context, uri): CodeAction[] {
-    const data = diagnostic.data as { id?: string; suggestion?: string } | undefined;
+    const data = diagnostic.data;
     if (!data?.id) return [];
 
     const actions: CodeAction[] = [];

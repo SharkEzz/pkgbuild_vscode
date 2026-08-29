@@ -28,6 +28,7 @@ describe('bundled server over stdio', () => {
   const request = <T = any>(method: string, params: unknown): Promise<T> =>
     new Promise((resolve) => {
       const id = nextId++;
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
       waiters.set(id, (msg) => resolve(msg as T));
       send({ id, method, params });
     });
@@ -54,9 +55,13 @@ describe('bundled server over stdio', () => {
       for (;;) {
         const headerEnd = buffer.indexOf('\r\n\r\n');
         if (headerEnd < 0) return;
-        const length = Number(/Content-Length: (\d+)/i.exec(buffer.subarray(0, headerEnd).toString())?.[1]);
+        const length = Number(
+          /Content-Length: (\d+)/i.exec(buffer.subarray(0, headerEnd).toString())?.[1],
+        );
         if (buffer.length < headerEnd + 4 + length) return;
-        const message = JSON.parse(buffer.subarray(headerEnd + 4, headerEnd + 4 + length).toString());
+        const message = JSON.parse(
+          buffer.subarray(headerEnd + 4, headerEnd + 4 + length).toString(),
+        );
         buffer = buffer.subarray(headerEnd + 4 + length);
         const waiter = typeof message.id === 'number' ? waiters.get(message.id) : undefined;
         if (waiter) {

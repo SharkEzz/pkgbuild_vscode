@@ -18,14 +18,14 @@ built locally and published on GitHub Releases.
 
 ### Decisions already made
 
-| Area | Decision |
-|---|---|
-| Parser | Own LSP built on `web-tree-sitter` + `tree-sitter-bash` WASM |
-| Node target | Extension-host Node by default; `pkgbuild.server.nodePath` as an opt-in escape hatch |
-| Build | pnpm workspaces + Turborepo + esbuild; TypeScript 7 for typechecking only |
-| Distribution | Local `vsce package` → `.vsix` attached to GitHub Releases. No Marketplace/OpenVSX/npm |
+| Area         | Decision                                                                                         |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| Parser       | Own LSP built on `web-tree-sitter` + `tree-sitter-bash` WASM                                     |
+| Node target  | Extension-host Node by default; `pkgbuild.server.nodePath` as an opt-in escape hatch             |
+| Build        | pnpm workspaces + Turborepo + esbuild; TypeScript 7 for typechecking only                        |
+| Distribution | Local `vsce package` → `.vsix` attached to GitHub Releases. No Marketplace/OpenVSX/npm           |
 | Package data | Local pacman sync DBs; network (AUR/archlinux.org) opt-in and disk-cached — **deferred to v0.2** |
-| Arch tools | Detect on PATH only, disable with a hint when absent — **deferred to v0.2** |
+| Arch tools   | Detect on PATH only, disable with a hint when absent — **deferred to v0.2**                      |
 
 ### Verification already completed
 
@@ -38,7 +38,7 @@ These were tested in a scratchpad, not assumed:
   `queries/highlights.scm`. It loads cleanly under `web-tree-sitter@0.26.13`.
 - Parsing a real PKGBUILD yields exact ranges for every top-level assignment and function.
 - Split packages work: `package_mypkg-docs` (hyphen in the function name) parses correctly,
-  and array assignments *inside* package functions are distinguishable from top-level ones
+  and array assignments _inside_ package functions are distinguishable from top-level ones
   by anchoring the query with `(program ...)`.
 - Error tolerance holds: a file with an unterminated string still reports `pkgname` and
   `pkgver`, with the `ERROR` node localized — so intelligence survives mid-typing.
@@ -99,11 +99,11 @@ Wraps tree-sitter and lifts the bash AST into a PKGBUILD-shaped model.
 - Semantic model, every node carrying a precise `Range`:
   ```ts
   interface PkgbuildModel {
-    variables: Map<string, PkgVariable>   // top-level only, (program ...)-anchored
-    functions: Map<string, PkgFunction>   // incl. package_* with hyphens
-    arrays:    Map<string, PkgArrayItem[]>// per-element ranges, quotes stripped
-    packages:  SplitPackage[]             // pkgname[] joined to its package_* function
-    errors:    Range[]                    // ERROR / MISSING nodes
+    variables: Map<string, PkgVariable>; // top-level only, (program ...)-anchored
+    functions: Map<string, PkgFunction>; // incl. package_* with hyphens
+    arrays: Map<string, PkgArrayItem[]>; // per-element ranges, quotes stripped
+    packages: SplitPackage[]; // pkgname[] joined to its package_* function
+    errors: Range[]; // ERROR / MISSING nodes
   }
   ```
 - Variable-reference index (`$pkgdir`, `${srcdir}`) with the enclosing function recorded —
@@ -124,23 +124,23 @@ Pure rule engine: `(model, text) → Diagnostic[]`, plus quick fixes as
 
 v0.1 rule set, ordered by how much pain each one actually prevents:
 
-| Code | Rule | Fix |
-|---|---|---|
-| 001 | Missing required field (`pkgname`, `pkgver`, `pkgrel`, `arch`) | Insert field |
-| 002 | `source[]` / `*sums[]` length mismatch | Add or remove entries |
-| 003 | `$pkgdir` used outside `package()` / `package_*()` | — |
-| 004 | `SKIP` checksum on a non-VCS source | — |
-| 005 | Split package declared in `pkgname[]` has no `package_<name>()` | Insert stub |
-| 006 | Invalid `pkgver` (contains `-`, `:`, or whitespace) | — |
-| 007 | Invalid `pkgrel` (not `N` or `N.M`) / `epoch` (not a non-negative int) | — |
-| 008 | Unquoted `$pkgdir` / `$srcdir` | Add quotes |
-| 009 | Deprecated `md5sums` / `sha1sums` | Convert to `sha256sums` |
-| 010 | Invalid `pkgname` (must match `^[a-z0-9@._+][a-z0-9@._+-]*$`) | — |
-| 011 | Non-SPDX `license` identifier (Arch RFC 0016) | Suggest closest SPDX ID |
-| 012 | No `package()` function at all | Insert stub |
-| 013 | Deprecated `$startdir` | — |
-| 014 | `arch=('any')` alongside a `build()` that compiles | — |
-| 015 | Malformed version comparator in `depends`/`provides` | — |
+| Code | Rule                                                                   | Fix                     |
+| ---- | ---------------------------------------------------------------------- | ----------------------- |
+| 001  | Missing required field (`pkgname`, `pkgver`, `pkgrel`, `arch`)         | Insert field            |
+| 002  | `source[]` / `*sums[]` length mismatch                                 | Add or remove entries   |
+| 003  | `$pkgdir` used outside `package()` / `package_*()`                     | —                       |
+| 004  | `SKIP` checksum on a non-VCS source                                    | —                       |
+| 005  | Split package declared in `pkgname[]` has no `package_<name>()`        | Insert stub             |
+| 006  | Invalid `pkgver` (contains `-`, `:`, or whitespace)                    | —                       |
+| 007  | Invalid `pkgrel` (not `N` or `N.M`) / `epoch` (not a non-negative int) | —                       |
+| 008  | Unquoted `$pkgdir` / `$srcdir`                                         | Add quotes              |
+| 009  | Deprecated `md5sums` / `sha1sums`                                      | Convert to `sha256sums` |
+| 010  | Invalid `pkgname` (must match `^[a-z0-9@._+][a-z0-9@._+-]*$`)          | —                       |
+| 011  | Non-SPDX `license` identifier (Arch RFC 0016)                          | Suggest closest SPDX ID |
+| 012  | No `package()` function at all                                         | Insert stub             |
+| 013  | Deprecated `$startdir`                                                 | —                       |
+| 014  | `arch=('any')` alongside a `build()` that compiles                     | —                       |
+| 015  | Malformed version comparator in `depends`/`provides`                   | —                       |
 
 Rules 003 and 008 need the reference index from the parser; the rest read the model
 directly. Rules run synchronously on a debounced `didChange` — the whole set is string and
@@ -171,7 +171,7 @@ Thin LSP wiring on `vscode-languageserver@10.1.1`, deliberately holding no analy
   `PKGBUILD.*`, `*.install`, `.SRCINFO`.
 - **TextMate grammar** at `syntaxes/pkgbuild.tmLanguage.json`, scope
   `source.shell.pkgbuild`: `include: source.shell` for all of bash, plus PKGBUILD-specific
-  patterns matched *before* it. This gives correct highlighting instantly on open, before
+  patterns matched _before_ it. This gives correct highlighting instantly on open, before
   the server has started — semantic tokens then refine it.
 - **Snippets** — `basic`, `-git` (with `pkgver()`), `-bin`, `python`, `rust`, `meson`,
   `cmake`, `split package`.
@@ -213,6 +213,7 @@ this is the bulk of the coverage.
 `~/.cache/paru/clone/*/PKGBUILD`, including AUR `-bin` and VCS packages. Rsync them into
 `fixtures/` as a regression corpus, expandable by cloning more from the AUR. Two assertions
 over every fixture:
+
 1. the parser produces `hasError === false` and a non-empty model;
 2. the analyzer emits **no** diagnostics for known-good published packages — any hit is
    either a real upstream bug or a false positive in our rules, and both are worth seeing.
